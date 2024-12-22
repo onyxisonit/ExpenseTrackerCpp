@@ -32,4 +32,8 @@ InputArgs::InputArgs(std::string_view line){
                 } break;
         }
     }
+    if (state == State::TextBegin){
+        m_args.push_back(ss.str());
+    }
+
 }

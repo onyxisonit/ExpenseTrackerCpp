@@ -1,5 +1,6 @@
 #include <iostream>
 #include "InputArgs.h"
+
 /*
 * CMD Args
 * -add  Label (+/- default:-) 0.00
@@ -17,6 +18,8 @@ int main(){
         // std::cout << cmd << std::endl;
         InputArgs inArgs(line);
         std::string cmd = inArgs[0];
+        
+        std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower); //make case insensitive by making input arguments lowercase
 
         //check command
         if (cmd == "add"){
