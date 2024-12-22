@@ -21,6 +21,8 @@ int main(){
         
         std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower); //make case insensitive by making input arguments lowercase
 
+        auto args = inArgs.Subset(1); //extract arguments using class (skip the command)
+
         //check command
         if (cmd == "add"){
             std::cout << cmd << std::endl;

@@ -37,3 +37,14 @@ InputArgs::InputArgs(std::string_view line){
     }
 
 }
+
+InputArgs InputArgs::Subset(size_t offset, size_t count)
+{
+    InputArgs subset;
+
+    auto it = m_args.begin() + offset;
+    while (count-- && it != m_args.end()){
+        subset.m_args.push_back(*(it++));
+    }
+    return subset;
+}
