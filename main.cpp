@@ -23,6 +23,10 @@ int main(){
 
         auto args = inArgs.Subset(1); //extract arguments using class (skip the command)
 
+        // for (size_t i = 0; i < args.Count(); ++i) {
+        //     std::cout << "Arg[" << i << "]: " << args[i] << std::endl;
+        // }
+
         //check command
         if (cmd == "add"){
             std::cout << cmd << std::endl;
