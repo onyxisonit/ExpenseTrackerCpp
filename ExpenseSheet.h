@@ -1,12 +1,17 @@
 #include <string>
 #include <vector>
 #include <ostream>
+#include <string_view>
 
 class ExpenseSheet{
     public:
         struct Entry{
             std::string label;
             double value = 0.0;
+
+            inline bool operator==(const Entry& rhs) const{
+                return label == rhs.label;
+            }
         };
 
     public:
