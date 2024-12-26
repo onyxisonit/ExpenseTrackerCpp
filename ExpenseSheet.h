@@ -23,8 +23,8 @@ class ExpenseSheet{
         //factor out argument parsing from actual expenses itself
         bool Add(std::string_view label, double amt);
         bool Del(std::string_view label);
-        void List(std::ostream& os); //write to arbitrary ostream instead of std out
-        double Eval();
+        void List(std::ostream& os) const; //write to arbitrary ostream instead of std out
+        double Eval() const;
 
     private:
         std::vector<Entry> m_entries;
