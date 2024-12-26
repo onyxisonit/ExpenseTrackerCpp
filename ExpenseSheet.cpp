@@ -31,12 +31,12 @@ bool ExpenseSheet::Del(std::string_view label)
 void ExpenseSheet::List(std::ostream &os) const
 {
     size_t index = 0;
-    auto precision = os.precision();
-    os.precision(3);
+    // auto precision = os.precision();
+    // os.precision(3);
     for (const Entry& e : m_entries){
-        os << "(" << index << ")" << e.label << " " << e.value << std::endl;
+        os << "(" << index++ << ")" << e.label << " " << e.value << std::endl;
     }
-    os.precision(precision); //restore old precision
+    // os.precision(precision); //restore old precision
 }
 
 double ExpenseSheet::Eval() const
