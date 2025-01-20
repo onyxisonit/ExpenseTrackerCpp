@@ -1,7 +1,7 @@
 #include "ExpenseSheet.h"
 
 //serialize Entry objects to stream
-void ExpenseSheet::Entry::Serialize(std::ostream &os)
+void ExpenseSheet::Entry::Serialize(std::ostream &os) const
 {
     //write label and value fields of Entry object to os
     os.write(label.c_str(), label.length() + 1);
@@ -23,6 +23,69 @@ void ExpenseSheet::Entry::Deserialize(std::istream &is)
     label = ss.str();
     
 }
+
+bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
+{
+    // //make sure all directories are created
+    // std::filesystem::create_directories(dataFile.parent_path());
+    
+    // std::ofstream fileOut(dataFile,  std::ios::out |  std::ios::trunc| std::ios::binary);
+    // if (fileOut.is_open()){
+    //     for (const Entry& e : m_entries){
+    //         e.Serialize(fileOut);
+    //     }
+    //     return true; 
+    // }
+    
+    // return false;   
+
+    //create directories if they don't exist
+    auto path = dataFile;
+    path.remove_filename(); //remove filename to ensure only directories are created (file created seperatelyt by ofstream constructor)
+    std::filesystem::create_directories(path);
+
+    std::ofstream fileOut(dataFile,  std::ios::out |  std::ios::trunc| std::ios::binary); //open file for writing
+    if (fileOut.is_open()){
+        //write number of entries to file
+        size_t count = m_entries.size();
+        fileOut.write((char*)&count, sizeof(size_t));
+
+        //serialize each entry to file
+        for (const Entry& e : m_entries){
+            e.Serialize(fileOut);
+        }
+        return true; 
+    }
+    
+    return false;
+
+}
+
+bool ExpenseSheet::Load(std::filesystem::path &dataFile)
+{
+    std::ifstream fileIn(dataFile, std::ios::in | std::ios::binary);
+    Entry e;
+    // while (is){
+    //     e.Deserialize(is);
+    //     m_entries.push_back(std::move(e));
+    // }
+
+    if (fileIn.is_open()){
+        //read number of entries
+        size_t count;
+        fileIn.read((char*)&count, sizeof(size_t));
+        m_entries.clear();
+        m_entries.reserve(count);
+        for (size_t i = 0; i < count; i++){
+            e.Deserialize(fileIn);
+            m_entries.push_back(std::move(e));
+        }
+        return true;
+    }
+    return false;
+}
+
+
 
 bool ExpenseSheet::Add(std::string_view label, double value)
 {

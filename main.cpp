@@ -1,5 +1,8 @@
 #include <iostream>
 #include <iomanip>
+#include <filesystem>
+#include <string>
+
 #include "InputArgs.h"
 #include "ExpenseSheet.h"
 

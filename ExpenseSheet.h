@@ -2,6 +2,9 @@
 #include <vector>
 #include <ostream>
 #include <sstream>
+#include <filesystem>
+#include <fstream>
+
 #include <string_view>
 
 class ExpenseSheet{
@@ -10,7 +13,7 @@ class ExpenseSheet{
             std::string label;
             double value = 0.0;
 
-            void Serialize(std::ostream& os);
+            void Serialize(std::ostream& os) const;
             void Deserialize(std::istream& is);
 
             inline bool operator==(const Entry& rhs) const{
@@ -24,6 +27,9 @@ class ExpenseSheet{
 
         ExpenseSheet& operator = (const ExpenseSheet&) = default;
 
+        //functions to load and save to data file
+        bool Load(std::filesystem::path& dataFile);
+        bool Save(std::filesystem::path& dataFile) const;
         //factor out argument parsing from actual expenses itself
         bool Add(std::string_view label, double amt);
         bool Del(std::string_view label);
