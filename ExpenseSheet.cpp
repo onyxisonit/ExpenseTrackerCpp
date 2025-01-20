@@ -74,7 +74,8 @@ bool ExpenseSheet::Load(std::filesystem::path &dataFile)
         //read number of entries
         size_t count;
         fileIn.read((char*)&count, sizeof(size_t));
-        m_entries.clear();
+        
+        m_entries.clear(); //clear all elements out of vector before we read 
         m_entries.reserve(count);
         for (size_t i = 0; i < count; i++){
             e.Deserialize(fileIn);

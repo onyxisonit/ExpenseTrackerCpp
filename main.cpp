@@ -71,6 +71,29 @@ int main(){
             // std::set_precision(3)
         }else if (cmd == "exit"){
             break;
+        }else if (cmd == "save"){
+            if (args.Count() == 1){
+                std::filesystem::path p = args[0];
+                p.replace_extension(".dat");
+                if (!expenses.Save(p)){
+                    std::cout << "Failed to save." << std::endl;
+                }
+            } else{
+                std::cout << "Used Incorrectly. Please folow format save <filepath>." << std::endl;
+            }
+
+            break;
+        }else if (cmd == "load"){
+            if (args.Count() == 1){
+                std::filesystem::path p = args[0];
+                p.replace_extension(".dat");
+                if (!expenses.Load(p)){
+                    std::cout << "Failed to save." << std::endl;
+                }
+            } else{
+                std::cout << "Used Incorrectly. Please folow format load <filepath>." << std::endl;
+            }
+            break;
         }else{
             std::cout << "Command \"" << cmd << "\" is unknown." << std::endl;
         }
