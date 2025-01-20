@@ -1,5 +1,29 @@
 #include "ExpenseSheet.h"
 
+//serialize Entry objects to stream
+void ExpenseSheet::Entry::Serialize(std::ostream &os)
+{
+    //write label and value fields of Entry object to os
+    os.write(label.c_str(), label.length() + 1);
+    os.write((char*)&value, sizeof(double));
+}
+
+//deserialize Entry objects from stream
+void ExpenseSheet::Entry::Deserialize(std::istream &is)
+{
+    std::stringstream ss;
+    char c;
+    //read serialize representation from is
+    do{
+        is.read(&c, 1);
+        ss << c;
+    } while (c != '\0');
+
+    is.read((char*)&value, sizeof(double));
+    label = ss.str();
+    
+}
+
 bool ExpenseSheet::Add(std::string_view label, double value)
 {
     //see if expense exists with label
@@ -47,3 +71,5 @@ double ExpenseSheet::Eval() const
     } 
     return value;
 }
+
+

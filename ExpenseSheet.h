@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <ostream>
+#include <sstream>
 #include <string_view>
 
 class ExpenseSheet{
@@ -8,6 +9,9 @@ class ExpenseSheet{
         struct Entry{
             std::string label;
             double value = 0.0;
+
+            void Serialize(std::ostream& os);
+            void Deserialize(std::istream& is);
 
             inline bool operator==(const Entry& rhs) const{
                 return label == rhs.label;
