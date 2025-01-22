@@ -42,8 +42,9 @@ bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
     //create directories if they don't exist
     auto path = dataFile;
     path.remove_filename(); //remove filename to ensure only directories are created (file created seperatelyt by ofstream constructor)
-    std::filesystem::create_directories(path);
-
+    if (!path.empty()){
+        std::filesystem::create_directories(path);
+    }
     std::ofstream fileOut(dataFile,  std::ios::out |  std::ios::trunc| std::ios::binary); //open file for writing
     if (fileOut.is_open()){
         //write number of entries to file
@@ -64,7 +65,7 @@ bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
 bool ExpenseSheet::Load(std::filesystem::path &dataFile)
 {
     std::ifstream fileIn(dataFile, std::ios::in | std::ios::binary);
-    Entry e;
+   
     // while (is){
     //     e.Deserialize(is);
     //     m_entries.push_back(std::move(e));
@@ -76,8 +77,9 @@ bool ExpenseSheet::Load(std::filesystem::path &dataFile)
         fileIn.read((char*)&count, sizeof(size_t));
         
         m_entries.clear(); //clear all elements out of vector before we read 
-        m_entries.reserve(count);
+        // m_entries.reserve(count);
         for (size_t i = 0; i < count; i++){
+            Entry e;
             e.Deserialize(fileIn);
             m_entries.push_back(std::move(e));
         }
@@ -85,7 +87,6 @@ bool ExpenseSheet::Load(std::filesystem::path &dataFile)
     }
     return false;
 }
-
 
 
 bool ExpenseSheet::Add(std::string_view label, double value)
@@ -104,8 +105,14 @@ bool ExpenseSheet::Add(std::string_view label, double value)
 
 bool ExpenseSheet::Del(std::string_view label)
 {
+    //remove quotation marks before assigning to Entry object
+    std::string labelStr(label);
+    if (labelStr.size() >= 2 && labelStr[0] == '"' && labelStr[labelStr.size() - 1] == '"') {
+        labelStr = labelStr.substr(1, labelStr.size() - 2);
+    }
+    
     Entry e;
-    e.label = label;
+    e.label = labelStr;
     auto element = std::find(m_entries.begin(), m_entries.end(), e);
 
     if (element != m_entries.end()){ //if element is in entries, erase and return true

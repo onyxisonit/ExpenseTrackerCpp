@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <filesystem>
+#include <algorithm>
+#include <fstream>
 #include <string>
 
 #include "InputArgs.h"
@@ -82,18 +84,17 @@ int main(){
                 std::cout << "Used Incorrectly. Please folow format save <filepath>." << std::endl;
             }
 
-            break;
         }else if (cmd == "load"){
             if (args.Count() == 1){
                 std::filesystem::path p = args[0];
                 p.replace_extension(".dat");
                 if (!expenses.Load(p)){
-                    std::cout << "Failed to save." << std::endl;
+                    std::cout << "Failed to load." << std::endl;
                 }
             } else{
                 std::cout << "Used Incorrectly. Please folow format load <filepath>." << std::endl;
             }
-            break;
+            
         }else{
             std::cout << "Command \"" << cmd << "\" is unknown." << std::endl;
         }
