@@ -28,8 +28,9 @@ class ExpenseSheet{
         ExpenseSheet& operator = (const ExpenseSheet&) = default;
 
         //functions to load and save to data file
-        bool Load(std::filesystem::path& dataFile);
-        bool Save(std::filesystem::path& dataFile) const;
+       
+        bool Load(const std::filesystem::path& dataFile);
+        bool Save(const std::filesystem::path& dataFile = "") const;
         //factor out argument parsing from actual expenses itself
         bool Add(std::string_view label, double amt);
         bool Del(std::string_view label);
@@ -37,5 +38,7 @@ class ExpenseSheet{
         double Eval() const;
 
     private:
+        std::filesystem::path m_dataFile;
         std::vector<Entry> m_entries;
+        
 };

@@ -16,9 +16,17 @@
 * -eval
 * -exit
 */
-int main(){
+int main(int argc, char** argv) {
     std::string line;
     ExpenseSheet expenses;
+
+    //check if file will be opened
+    if (argc == 2) {
+        std::filesystem::path path = (argv[1]);
+        expenses.Load(path);
+    }
+
+    //command loop
     while (true){
         //get user input
         std::cout << "> ";
@@ -76,18 +84,20 @@ int main(){
         }else if (cmd == "save"){
             if (args.Count() == 1){
                 std::filesystem::path p = args[0];
-                p.replace_extension(".dat");
                 if (!expenses.Save(p)){
                     std::cout << "Failed to save." << std::endl;
                 }
-            } else{
+            } else if (args.Count() == 0){
+                if (!expenses.Save()){
+                    std::cout << "Failed to save. Try the format save <filepath>." << std::endl;
+                }
+            }else{
                 std::cout << "Used Incorrectly. Please folow format save <filepath>." << std::endl;
             }
 
         }else if (cmd == "load"){
             if (args.Count() == 1){
                 std::filesystem::path p = args[0];
-                p.replace_extension(".dat");
                 if (!expenses.Load(p)){
                     std::cout << "Failed to load." << std::endl;
                 }

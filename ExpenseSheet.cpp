@@ -24,7 +24,7 @@ void ExpenseSheet::Entry::Deserialize(std::istream &is)
     
 }
 
-bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
+bool ExpenseSheet::Save(const std::filesystem::path &dataFile) const
 {
     // //make sure all directories are created
     // std::filesystem::create_directories(dataFile.parent_path());
@@ -37,15 +37,24 @@ bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
     //     return true; 
     // }
     
-    // return false;   
-
+    // return false;  
+    auto p = dataFile;
+    if (dataFile.empty()){
+        if (m_dataFile.empty()){
+           return false;
+        } else {
+            p = m_dataFile;
+        }
+    }
     //create directories if they don't exist
-    auto path = dataFile;
+    auto path = p;
     path.remove_filename(); //remove filename to ensure only directories are created (file created seperatelyt by ofstream constructor)
     if (!path.empty()){
         std::filesystem::create_directories(path);
     }
-    std::ofstream fileOut(dataFile,  std::ios::out |  std::ios::trunc| std::ios::binary); //open file for writing
+ 
+    p.replace_extension(".dat");
+    std::ofstream fileOut(p, std::ios::out |  std::ios::trunc| std::ios::binary); //open file for writing
     if (fileOut.is_open()){
         //write number of entries to file
         size_t count = m_entries.size();
@@ -62,9 +71,11 @@ bool ExpenseSheet::Save(std::filesystem::path &dataFile) const
 
 }
 
-bool ExpenseSheet::Load(std::filesystem::path &dataFile)
+bool ExpenseSheet::Load(const std::filesystem::path &dataFile)
 {
-    std::ifstream fileIn(dataFile, std::ios::in | std::ios::binary);
+    auto path = dataFile;
+    path.replace_extension(".dat");
+    std::ifstream fileIn(path, std::ios::in | std::ios::binary);
    
     // while (is){
     //     e.Deserialize(is);
@@ -72,6 +83,7 @@ bool ExpenseSheet::Load(std::filesystem::path &dataFile)
     // }
 
     if (fileIn.is_open()){
+        m_dataFile = path;
         //read number of entries
         size_t count;
         fileIn.read((char*)&count, sizeof(size_t));
