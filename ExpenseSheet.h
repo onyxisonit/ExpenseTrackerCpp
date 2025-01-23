@@ -36,6 +36,7 @@ class ExpenseSheet{
         bool Del(std::string_view label);
         void List(std::ostream& os) const; //write to arbitrary ostream instead of std out
         double Eval() const;
+        void Clear();
 
     private:
         std::filesystem::path m_dataFile;

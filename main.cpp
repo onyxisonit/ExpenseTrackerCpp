@@ -104,7 +104,8 @@ int main(int argc, char** argv) {
             } else{
                 std::cout << "Used Incorrectly. Please folow format load <filepath>." << std::endl;
             }
-            
+        } else if (cmd == "clear"){
+            expenses.Clear();     
         }else{
             std::cout << "Command \"" << cmd << "\" is unknown." << std::endl;
         }

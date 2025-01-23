@@ -16,7 +16,9 @@ void ExpenseSheet::Entry::Deserialize(std::istream &is)
     //read serialize representation from is
     do{
         is.read(&c, 1);
-        ss << c;
+        if (c != '\0'){
+            ss << c;
+        }
     } while (c != '\0');
 
     is.read((char*)&value, sizeof(double));
@@ -155,4 +157,8 @@ double ExpenseSheet::Eval() const
     return value;
 }
 
-
+void ExpenseSheet::Clear()
+{
+    m_dataFile = "";
+    m_entries.clear();
+}
