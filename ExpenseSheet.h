@@ -39,8 +39,8 @@ class ExpenseSheet{
         void Clear();
 
         //NOTE: can implement interfaces later but will bring eprfromance down 
-        bool ExportCSV(const std::filesystem::path& dataFile);
-        bool ExportHTML(const std::filesystem::path& dataFile);
+        bool ExportCSV(const std::filesystem::path& dataFile) const;
+        bool ExportHTML(const std::filesystem::path& dataFile) const;
 
     private:
         std::filesystem::path m_dataFile;

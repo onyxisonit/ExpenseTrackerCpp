@@ -163,7 +163,7 @@ void ExpenseSheet::Clear()
     m_entries.clear();
 }
 
-bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile)
+bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile) const
 {
     auto xpath = dataFile;
     xpath.replace_extension(".csv");
@@ -175,7 +175,7 @@ bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile)
     }
     std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
     if (fileOut.is_open()){
-        fileOut << "Position,LabelValue" << "\n";
+        fileOut << "Position,Label,Value" << "\n";
         size_t index = 0;
         for (const Entry& e : m_entries){
             fileOut << ++index << "," <<e.label << "," << e.value << "\n";
@@ -185,7 +185,7 @@ bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile)
     return false;
 }
 
-bool ExpenseSheet::ExportHTML(const std::filesystem::path& dataFile)
+bool ExpenseSheet::ExportHTML(const std::filesystem::path& dataFile) const
 {
     auto xpath = dataFile;
     xpath.replace_extension(".html");
@@ -197,11 +197,50 @@ bool ExpenseSheet::ExportHTML(const std::filesystem::path& dataFile)
     }
     std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
     if (fileOut.is_open()){
-        fileOut << "<html><body><table><tr><th>Label</th><th>Value</th></tr>";
-        for (const Entry& e : m_entries){
+        fileOut << 
+R"(<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>)" << xpath.filename().string() << R"(</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1 fw-bold fs-2"">Expenses: )" << xpath.stem().string() << R"(</span>
+    </div>
+    </nav>
+    <div class="container mt-2">
+        <div class="card">
+            <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="fs-4">Position</th>
+                        <th scope="col" class="fs-4">Label</th>
+                        <th scope="col" class="fs-4">Value</th>
+                    </tr>
+                </thead>
+                <tbody>)"; 
 
-            fileOut << e.label << "," << e.value << std::endl;
+        size_t index = 0;   
+        for (const Entry& e : m_entries){
+            fileOut << "<tr><th scope=\"row\">" << ++index << "</th><td>" << e.label << "</td><td>" << e.value << "</td></tr>";
         }
+        fileOut << 
+R"(
+                </tbody>
+            </table>
+            <p class="fs-4")" << "Total: " << Eval() << R"(</p>
+        </div>
+    </div> 
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>)";
+        
         return true;
     }
     return false;
