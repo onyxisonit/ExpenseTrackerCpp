@@ -38,6 +38,10 @@ class ExpenseSheet{
         double Eval() const;
         void Clear();
 
+        //NOTE: can implement interfaces later but will bring eprfromance down 
+        bool ExportCSV(const std::filesystem::path& dataFile);
+        bool ExportHTML(const std::filesystem::path& dataFile);
+
     private:
         std::filesystem::path m_dataFile;
         std::vector<Entry> m_entries;

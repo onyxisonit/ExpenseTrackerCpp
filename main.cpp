@@ -104,8 +104,20 @@ int main(int argc, char** argv) {
             } else{
                 std::cout << "Used Incorrectly. Please folow format load <filepath>." << std::endl;
             }
-        } else if (cmd == "clear"){
+        }else if (cmd == "clear"){
             expenses.Clear();     
+        }else if (cmd =="export"){
+            if (args.Count() == 2){
+                if (args[0] == "csv"){
+                    expenses.ExportCSV(args[1]);
+                }else if (args[0] == "html"){
+                    expenses.ExportHTML(args[1]);
+                }else{
+                    std::cout << "Used Incorrectly. Please folow format export <csv/html> <file>" << std::endl;
+                }
+            }else{
+                    std::cout << "Used Incorrectly. Please folow format export <csv/html> <file>." << std::endl;
+            }           
         }else{
             std::cout << "Command \"" << cmd << "\" is unknown." << std::endl;
         }

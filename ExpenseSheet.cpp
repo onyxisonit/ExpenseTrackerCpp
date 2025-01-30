@@ -162,3 +162,43 @@ void ExpenseSheet::Clear()
     m_dataFile = "";
     m_entries.clear();
 }
+
+bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile)
+{
+    auto xpath = dataFile;
+    xpath.replace_extension(".csv");
+
+    auto path = xpath;
+    path.remove_filename();
+    if (!path.empty()){
+        std::filesystem::create_directories(path);
+    }
+    std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
+    if (fileOut.is_open()){
+        for (const Entry& e : m_entries){
+            fileOut << e.label << "," << e.value << std::endl;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool ExpenseSheet::ExportHTML(const std::filesystem::path& dataFile)
+{
+    auto xpath = dataFile;
+    xpath.replace_extension(".html");
+
+    auto path = xpath;
+    path.remove_filename();
+    if (!path.empty()){
+        std::filesystem::create_directories(path);
+    }
+    std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
+    if (fileOut.is_open()){
+        for (const Entry& e : m_entries){
+            fileOut << e.label << "," << e.value << std::endl;
+        }
+        return true;
+    }
+    return false;
+}
