@@ -203,13 +203,13 @@ R"(<!doctype html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>)" << xpath.filename().string() << R"(</title>
+    <title>)" << m_dataFile.filename().string() << R"(</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <body>
     <nav class="navbar bg-body-tertiary">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1 fw-bold fs-2"">Expenses: )" << xpath.stem().string() << R"(</span>
+        <span class="navbar-brand mb-0 h1 fw-bold fs-2">Expenses: )" << m_dataFile.stem().string() << R"(</span>
     </div>
     </nav>
     <div class="container mt-2">
@@ -227,15 +227,17 @@ R"(<!doctype html>
 
         size_t index = 0;   
         for (const Entry& e : m_entries){
-            fileOut << "<tr><th scope=\"row\">" << ++index << "</th><td>" << e.label << "</td><td>" << e.value << "</td></tr>";
+            fileOut << "<tr><th scope=\"row\">" << ++index << "</th>"
+            << "<td>" << e.label << "</td>"
+            << "<td class=\"" << HTMLText(e.value) << "\">" << e.value << "</td></tr>";
         }
         fileOut << 
 R"(
                 </tbody>
             </table>
-            <p class="fs-4")" << "Total: " << Eval() << R"(</p>
+            <p class="fs-4 )" << HTMLText(Eval()) << R"(">Total: )" << Eval() << R"(</p>
         </div>
-    </div> 
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>

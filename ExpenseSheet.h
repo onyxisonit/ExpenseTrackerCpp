@@ -43,6 +43,11 @@ class ExpenseSheet{
         bool ExportHTML(const std::filesystem::path& dataFile) const;
 
     private:
+        static inline std::string HTMLText(double value){
+            return value >= 0.0 ? "text-success" : "text-danger";
+        }
+
+    private:
         std::filesystem::path m_dataFile;
         std::vector<Entry> m_entries;
         
