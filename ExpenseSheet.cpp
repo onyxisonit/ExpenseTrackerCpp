@@ -175,8 +175,10 @@ bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile)
     }
     std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
     if (fileOut.is_open()){
+        fileOut << "Position,LabelValue" << "\n";
+        size_t index = 0;
         for (const Entry& e : m_entries){
-            fileOut << e.label << "," << e.value << std::endl;
+            fileOut << ++index << "," <<e.label << "," << e.value << "\n";
         }
         return true;
     }
@@ -195,7 +197,9 @@ bool ExpenseSheet::ExportHTML(const std::filesystem::path& dataFile)
     }
     std::ofstream fileOut(xpath, std::ios::out | std::ios::trunc); //open file for writing
     if (fileOut.is_open()){
+        fileOut << "<html><body><table><tr><th>Label</th><th>Value</th></tr>";
         for (const Entry& e : m_entries){
+
             fileOut << e.label << "," << e.value << std::endl;
         }
         return true;

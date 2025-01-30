@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
                 }
                 //expenses.Add(label, value);
             }else{
-                std::cout << "Used Incorrectly. Please folow format add <label> (+/-) <value>. If a label longer than one word is desired, please wrap label in quotation marks "". " << std::endl;
+                std::cout << "Used Incorrectly. Please folow format add <label> (+/-) <value>. Label must be unique. Value must not contain commas. If a label longer than one word is desired, please wrap label in quotation marks "". " << std::endl;
             }
            
         }else if (cmd == "del"){
