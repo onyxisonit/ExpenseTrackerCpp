@@ -80,6 +80,31 @@ int main(int argc, char** argv) {
             std::cout << "TOTAL: " << value << std::endl;
             // std::set_precision(3)
         }else if (cmd == "exit"){
+            if (expenses.HasUnsavedChanges()) { // Check for unsaved changes
+                std::string response;
+                while (true) { // Loop until valid input is received (yes or no)
+                    std::cout << "You have unsaved changes. Save before exiting? (yes/no): ";
+                    std::cin >> response;
+
+                    // Case-insensitive comparison
+                    std::transform(response.begin(), response.end(), response.begin(), ::tolower);
+
+                    if (response == "yes") {
+                        if (!expenses.Save()) { 
+                            std::cout << "Failed to save expenses. Try saving manually.\n";
+                        } else {
+                            std::cout << "Expenses saved.\n";
+                        }
+                        break; 
+                    } else if (response == "no") {
+                        std::cout << "Expenses not saved.\n";
+                        break; 
+                    } else {
+                        std::cout << "Invalid input. Please enter 'yes' or 'no'.\n";
+                    }
+                }
+            }
+            std::cout << "Exiting program.\n";
             break;
         }else if (cmd == "save"){
             if (args.Count() == 1){

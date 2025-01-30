@@ -28,9 +28,9 @@ class ExpenseSheet{
         ExpenseSheet& operator = (const ExpenseSheet&) = default;
 
         //functions to load and save to data file
-       
         bool Load(const std::filesystem::path& dataFile);
-        bool Save(const std::filesystem::path& dataFile = "") const;
+        bool Save(const std::filesystem::path& dataFile = "");
+
         //factor out argument parsing from actual expenses itself
         bool Add(std::string_view label, double amt);
         bool Del(std::string_view label);
@@ -42,6 +42,10 @@ class ExpenseSheet{
         bool ExportCSV(const std::filesystem::path& dataFile) const;
         bool ExportHTML(const std::filesystem::path& dataFile) const;
 
+        bool HasUnsavedChanges() const {
+            return m_unsavedChanges;
+        }
+    
     private:
         static inline std::string HTMLText(double value){
             return value >= 0.0 ? "text-success" : "text-danger";
@@ -50,5 +54,5 @@ class ExpenseSheet{
     private:
         std::filesystem::path m_dataFile;
         std::vector<Entry> m_entries;
-        
+        bool m_unsavedChanges;
 };

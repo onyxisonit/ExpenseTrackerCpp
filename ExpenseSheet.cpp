@@ -26,7 +26,7 @@ void ExpenseSheet::Entry::Deserialize(std::istream &is)
     
 }
 
-bool ExpenseSheet::Save(const std::filesystem::path &dataFile) const
+bool ExpenseSheet::Save(const std::filesystem::path &dataFile)
 {
     // //make sure all directories are created
     // std::filesystem::create_directories(dataFile.parent_path());
@@ -66,6 +66,7 @@ bool ExpenseSheet::Save(const std::filesystem::path &dataFile) const
         for (const Entry& e : m_entries){
             e.Serialize(fileOut);
         }
+        m_unsavedChanges = false;
         return true; 
     }
     
@@ -97,6 +98,7 @@ bool ExpenseSheet::Load(const std::filesystem::path &dataFile)
             e.Deserialize(fileIn);
             m_entries.push_back(std::move(e));
         }
+        m_unsavedChanges = false;
         return true;
     }
     return false;
@@ -113,6 +115,7 @@ bool ExpenseSheet::Add(std::string_view label, double value)
     bool canAdd = std::find(m_entries.begin(), m_entries.end(), e) == m_entries.end(); 
     if (canAdd){
         m_entries.push_back(std::move(e)); //use move to save space *
+        m_unsavedChanges = true;
     }
     return canAdd; //validate we have inserted
 }
@@ -131,6 +134,7 @@ bool ExpenseSheet::Del(std::string_view label)
 
     if (element != m_entries.end()){ //if element is in entries, erase and return true
         m_entries.erase(element);
+        m_unsavedChanges = true;
         return true;
     }
 
@@ -161,6 +165,7 @@ void ExpenseSheet::Clear()
 {
     m_dataFile = "";
     m_entries.clear();
+    m_unsavedChanges = true;
 }
 
 bool ExpenseSheet::ExportCSV(const std::filesystem::path& dataFile) const
